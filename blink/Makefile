@@ -12,9 +12,11 @@ OBJS = $(C_SRCS:.c=.o) $(CPP_SRCS:.cpp=.o) $(ASM_SRCS:.S=.o)
 
 # Paths
 PWD = $(shell pwd)
+HOME = $(PWD)/..
 TOOLS_PATH = /usr/local/gcc-arm-none-eabi-4_8-20140725/bin
 TOOLS_LIBS = /usr/local/gcc-arm-none-eabi-4_8-20140725/arm-none-eabi/lib
-TEENSY_CORE_PATH = /Users/fkair/teensy/teensyCore
+TEENSY_CORE_PATH = $(HOME)/teensyCore
+TEENSY_CORE_SRC = $(TEENSY_CORE_PATH)/src
 TEENSY_CORE_LIB = $(TEENSY_CORE_PATH)/lib
 TEENSY_TOOLS_PATH = /Applications/Arduino.app/Contents/Java/hardware/tools
 OUTPUT_DIR = $(PWD)/bin
@@ -30,7 +32,6 @@ OBJCOPY = $(TOOLS_PATH)/arm-none-eabi-objcopy
 AR = $(TOOLS_PATH)/arm-none-eabi-ar
 RM = rm -rf
 TEENSY_UPLOADER = $(TEENSY_TOOLS_PATH)/teensy_post_compile
-TEENSY_POST_COMPILE_OPTS = -file=$(NAME) -path=$(OUTPUT_DIR) -tools=$(TEENSY_TOOLS_PATH) -board=TEENSY36
 
 # Include
 INCLUDE_DIRS = -I$(TEENSY_CORE_PATH)/include -I./include
@@ -49,12 +50,14 @@ ASM_FLAGS = $(COMMON_OPTS) $(ASM_OPTS) $(TARGET_OPTS) $(PREPROC_SYMBOLS) $(INCLU
 C_FLAGS = $(COMMON_OPTS) $(TARGET_OPTS) $(PREPROC_SYMBOLS) $(INCLUDE_DIRS)
 CPP_FLAGS = $(COMMON_OPTS) $(CPP_OPTS) $(TARGET_OPTS) $(PREPROC_SYMBOLS) $(INCLUDE_DIRS)
 
-LINKER_SCRIPT_FLAG = -T./deps/mk66fx1m0.ld
+LINKER_SCRIPT_FLAG = -T$(TEENSY_CORE_SRC)/mk66fx1m0.ld
 LD_FLAGS = -O -Wl,--gc-sections,--relax,--defsym=__rtc_localtime=0 $(LINKER_SCRIPT_FLAG) $(TARGET_OPTS)
 LD_FLAGS_LIBS = -L$(TEENSY_CORE_LIB) -larm_cortexM4lf_math -lm
 
 ELFTOHEX_OPTS = -O ihex -R .eeprom
 ELFTOEEP_OPTS = -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
+
+TEENSY_POST_COMPILE_OPTS = -file=$(NAME) -path=$(OUTPUT_DIR) -tools=$(TEENSY_TOOLS_PATH) -board=TEENSY36
 
 # Rules
 

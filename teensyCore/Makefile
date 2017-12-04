@@ -13,7 +13,8 @@ ASM_SRCS = $(wildcard src/*.S)
 OBJS = $(C_SRCS:.c=.o) $(CPP_SRCS:.cpp=.o) $(ASM_SRCS:.S=.o)
 
 # Paths
-TOOLS_PATH = /usr/local/gcc-arm-none-eabi-4_8-20140725/bin
+#TOOLS_PATH = /usr/local/gcc-arm-none-eabi-4_8-20140725/bin
+TOOLS_PATH = /usr/local/gcc-arm-none-eabi-5_4-2016q3/bin
 INCLUDE_DIRS = -I./include
 OUTPUT_DIR = ./lib
 
